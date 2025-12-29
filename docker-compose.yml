@@ -1,0 +1,20 @@
+services:
+  # حاوية قاعدة البيانات
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root # يجب أن تطابق $pass في ملف db.php
+      MYSQL_DATABASE: hospitals # اسم قاعدة البيانات
+    ports:
+      - "3306:3306"
+
+  # حاوية تطبيق PHP (مشروعك)
+  app:
+    build:
+      context: .
+      dockerfile: DockerFile
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
