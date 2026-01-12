@@ -5,14 +5,17 @@ WORKDIR /var/www/html
 # تثبيت إضافات mysqli
 RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
 
-# نسخ كل شيء من داخل مجلد Main إلى المجلد الرئيسي للسيرفر مباشرة
-COPY src/Main/ .
+# نسخ كافة المجلدات والملفات
+COPY . .
 
-# إعطاء الصلاحيات
+# إعطاء الصلاحيات الكاملة لجميع الملفات المنسوخة
 RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
 
-# إخبار السيرفر بفتح login.php كصفحة رئيسية
-RUN sed -i 's|DirectoryIndex index.html index.cgi index.pl index.php index.xhtml index.htm|DirectoryIndex login.php index.php index.html|' /etc/apache2/mods-enabled/dir.conf
+# توجيه السيرفر للبحث عن login.php في كل المجلدات الفرعية
+RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/src/Main|' /etc/apache2/sites-available/000-default.conf
+
+# تعيين ملف البداية
+RUN sed -i 's|DirectoryIndex index.html index.cgi index.pl index.php index.xhtml index.htm|DirectoryIndex login.php index.php|' /etc/apache2/mods-enabled/dir.conf
 
 EXPOSE 80
 
