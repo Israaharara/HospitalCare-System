@@ -8,11 +8,12 @@ COPY src/ .
 
 RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
 
-RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/Main|' /etc/apache2/sites-available/000-default.conf
+RUN sed -i 's|DirectoryIndex index.html index.cgi index.pl index.php index.xhtml index.htm|DirectoryIndex login.php index.php index.html|' /etc/apache2/mods-enabled/dir.conf
 
 EXPOSE 80
 
 CMD ["apache2-foreground"]
+
 
 
 
